@@ -50,6 +50,8 @@ async function formatMoviesData(movies) {
 // Main component
 const MoviesFetch = ({ setMovies, setTopRated, settrendings, setbollywood }) => {
   useEffect(() => {
+    let isMounted = true;
+    
     // Using a single async function to manage all fetches
     const fetchAllMovieData = async () => {
       const BASE_URL = "https://moodflixbackend-1.onrender.com/api";
@@ -65,7 +67,7 @@ const MoviesFetch = ({ setMovies, setTopRated, settrendings, setbollywood }) => 
       await Promise.all(
         fetchOperations.map(async ({ endpoint, setter }) => {
           const data = await fetchFromAPI(`${BASE_URL}${endpoint}`);
-          if (data && data.movies) {
+          if (data && data.movies && isMounted) {
             const formattedMovies = await formatMoviesData(data.movies);
             setter(formattedMovies);
           }
@@ -74,9 +76,11 @@ const MoviesFetch = ({ setMovies, setTopRated, settrendings, setbollywood }) => 
     };
     
     fetchAllMovieData();
-  }, [setTopRated, settrendings, setbollywood, setMovies]);
 
-  
+    return () => {
+      isMounted = false;
+    };
+  }, []); // Empty dependency array since we're using stable setter functions
 };
 
 export default MoviesFetch;
