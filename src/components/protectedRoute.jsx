@@ -1,8 +1,11 @@
-import { Navigate } from 'react-router-dom';
+import { Navigate, useNavigate } from 'react-router-dom';
+import { useCallback, useEffect, useState } from 'react';
 
-const ProtectedRoute = ({ children }) => {
-  // Simple function to check auth without React state
-  const isAuthenticated = () => {
+const useAuth = () => {
+  const [isAuth, setIsAuth] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+
+  const checkAuth = useCallback(() => {
     try {
       const token = localStorage.getItem('auth_token');
       if (!token) return false;
@@ -10,20 +13,36 @@ const ProtectedRoute = ({ children }) => {
       const decoded = JSON.parse(atob(token));
       const now = Math.floor(Date.now() / 1000);
       
-      // Check if token is still valid and has proper access
       return !(decoded.exp < now || decoded.access !== "v2_access");
     } catch (error) {
       console.error('Authentication error:', error);
       return false;
     }
-  };
+  }, []);
 
-  // No loading state, just check and redirect if needed
-  if (!isAuthenticated()) {
-    return <Navigate to="/access-denied" replace />;
+  useEffect(() => {
+    const authStatus = checkAuth();
+    setIsAuth(authStatus);
+    setIsLoading(false);
+  }, [checkAuth]);
+
+  return { isAuth, isLoading };
+};
+
+const ProtectedRoute = ({ children }) => {
+  const   naviagte=useNavigate()
+
+  const { isAuth, isLoading } = useAuth();
+
+  if (isLoading) {
+    return null;
   }
 
-  // If authenticated, render the children
+  if (!isAuth) {
+    return window.location.href = `https://www.moodflix.free.nf/?i=1`;
+  }
+
+  
   return children;
 };
 

@@ -53,6 +53,7 @@ export default function MovieDetailPage() {
 
   // Fetch movie data
   useEffect(() => {
+    console.log("Fetching movie data for ID:", id);
     const fetchMovie = async () => {
       setLoading(true);
       try {

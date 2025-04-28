@@ -20,7 +20,7 @@ import ProtectedRoute from './components/protectedRoute';
 function App() {
   const [selectedMood, setSelectedMood] = useState(null);
   const [movieData, setmovieData] = useState([]);
-  const [topRated, settopRated] = useState([]);
+  const [toprated, settoprated] = useState([]);
   const [trendings, settrendings] = useState([]);
   const [bollywood, setbollywood] = useState([]);
   const [Topbanner, setTopbanner] = useState([]);
@@ -32,24 +32,9 @@ function App() {
   };
 
   // Dashboard content component - memoized to prevent unnecessary re-renders
-  const Dashboard = useMemo(() => {
-    return function DashboardComponent() {
-      return (
-        <>
-          <TrendingSlider />
-          <MoviesFetch
-            movie={setmovieData}
-            setTopRated={settopRated}
-            setbollywood={setbollywood}
-            settrendings={settrendings}
-          />
-          <MovieCard heading="🔥 Trending Tadka: Sabse Garam Movies!" movies={trendings} />
-          <MovieCard heading="💥 Tera Mood, Hamari Hit!" movies={topRated} />
-          <MovieCard heading="BollyWood" movies={bollywood} />
-        </>
-      );
-    };
-  }, []); // Empty dependency array since we're using stable setter functions
+  // const Dashboard = useMemo(() => () => (
+
+  // ), [trendings, toprated, bollywood]); // Only re-create when these props change
 
   return (
     <Router>
@@ -62,7 +47,18 @@ function App() {
           {/* Protected routes - require authentication */}
           <Route path="/" element={
             <ProtectedRoute>
-              <Dashboard />
+                  <>
+      <TrendingSlider />
+      <MoviesFetch
+        movie={setmovieData}
+        settoprated={settoprated}
+        setbollywood={setbollywood}
+        settrendings={settrendings}
+      />
+      <MovieCard heading="🔥 Trending Tadka: Sabse Garam Movies!" movies={trendings} />
+      <MovieCard heading="💥 Tera Mood, Hamari Hit!" movies={toprated} />
+      <MovieCard heading="BollyWood" movies={bollywood} />
+    </>
             </ProtectedRoute>
           } />
           

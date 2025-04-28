@@ -1,83 +1,83 @@
-import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useEffect, useState, useRef } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
+
+// Move token verification outside component to prevent recreation
+const verifyToken = (token, navigate) => {
+  try {
+    const decoded = JSON.parse(atob(token));
+    const now = Math.floor(Date.now() / 1000);
+    
+    if (decoded.exp < now) {
+      alert('Session expired! Please try again.');
+      localStorage.removeItem('auth_token');
+      navigate('/access-denied');
+      return false;
+    }
+    
+    if (decoded.access !== "v2_access") {
+      alert('Unauthorized Access! Invalid permission.');
+      localStorage.removeItem('auth_token');
+      navigate('/access-denied');
+      return false;
+    }
+    
+    localStorage.setItem('auth_token', token);
+    return true;
+  } catch (error) {
+    alert('Invalid Token!');
+    localStorage.removeItem('auth_token');
+    window.location.href = `https://www.moodflix.free.nf/?i=1`;
+    return false;
+  }
+};
 
 const TokenRedirect = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const [isLoading, setIsLoading] = useState(true);
+  const navigateRef = useRef(navigate);
+  navigateRef.current = navigate;
 
   useEffect(() => {
+    let timeoutId;
+    let mounted = true;
+
     const validateAndStoreToken = () => {
       try {
-        // Get token from URL parameters
-        const urlParams = new URLSearchParams(window.location.search);
+        const urlParams = new URLSearchParams(location.search);
         const token = urlParams.get('auth');
-        console.log('Token from URL:', token);
         
         if (!token) {
-          console.log('No token in URL, checking localStorage');
-          // If no token in URL, check if we have one in localStorage
           const storedToken = localStorage.getItem('auth_token');
           if (!storedToken) {
-            console.log('No token found anywhere, redirecting to access denied');
-            navigate('/access-denied');
+            navigateRef.current('/access-denied');
             return;
           }
-          // If we have a stored token, verify it separately
-          return verifyToken(storedToken);
-        }
-        
-        // If new token in URL, verify and store it
-        verifyToken(token);
-      } catch (error) {
-        console.error('Token validation error:', error);
-        localStorage.removeItem('auth_token'); // Clear any invalid token
-        navigate('/access-denied');
-      } finally {
-        // Keep loading state true for a moment to show the loader
-        setTimeout(() => {
-          setIsLoading(false);
-        }, 1500);
-      }
-    };
-
-    const verifyToken = (token) => {
-      try {
-        // Decode the token
-        const decoded = JSON.parse(atob(token));
-        console.log('Decoded token:', decoded);
-        
-        const now = Math.floor(Date.now() / 1000);
-        
-        if (decoded.exp < now) {
-          console.log('Token expired');
-          alert('Session expired! Please try again.');
-          localStorage.removeItem('auth_token');
-          navigate('/access-denied');
-        } else if (decoded.access !== "v2_access") {
-          console.log('Invalid access type:', decoded.access);
-          alert('Unauthorized Access! Invalid permission.');
-          localStorage.removeItem('auth_token');
-          navigate('/access-denied');
-        } else {
-          console.log('Token valid, storing and navigating to dashboard');
-          // Store valid token
-          localStorage.setItem('auth_token', token);
-          
-          // Navigate to dashboard after short delay
-          setTimeout(() => {
-            navigate('/');
-          }, 1000);
+          if (verifyToken(storedToken, navigateRef.current)) {
+            timeoutId = setTimeout(() => navigateRef.current('/'), 1000);
+          }
+        } else if (verifyToken(token, navigateRef.current)) {
+          timeoutId = setTimeout(() => navigateRef.current('/'), 1000);
         }
       } catch (error) {
-        console.error('Token verification error:', error);
-        alert('Invalid Token!');
         localStorage.removeItem('auth_token');
-        navigate('/access-denied');
+        navigateRef.current('/access-denied');
+      } finally {
+        if (mounted) {
+          timeoutId = setTimeout(() => setIsLoading(false), 1500);
+        }
       }
     };
 
     validateAndStoreToken();
-  }, [navigate]);
+
+    return () => {
+      mounted = false;
+      if (timeoutId) {
+        clearTimeout(timeoutId);
+      }
+    };
+  }, [location.search]); // Only depend on location.search
 
   return (
     <div className="relative flex justify-center items-center h-screen text-xl">

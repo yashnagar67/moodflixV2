@@ -39,27 +39,26 @@ async function formatMoviesData(movies) {
         title: movie.title,
         rating: movie.rating || "N/A",
         year:new Date(movie.releaseDate).getFullYear(),
-        image: movie.posterUrl.includes("example.com") ? imgUrl : (movie.posterUrl || imgUrl),
+        image: movie.posterUrl.includes("example.com")||movie.posterUrl.includes(" ") ? imgUrl : (movie.posterUrl || imgUrl),
 
         URL: movie.downloadLink || "N/A",
       };
     })
+
   );
 }
 
 // Main component
-const MoviesFetch = ({ setMovies, setTopRated, settrendings, setbollywood }) => {
+const MoviesFetch = ({ setMovies, settrendings, settoprated, setbollywood }) => {
   useEffect(() => {
-    let isMounted = true;
-    
     // Using a single async function to manage all fetches
     const fetchAllMovieData = async () => {
       const BASE_URL = "https://moodflixbackend-1.onrender.com/api";
       
       // Define all data fetching operations
       const fetchOperations = [
-        { endpoint: "/toprated", setter: setTopRated },
         { endpoint: "/trendings", setter: settrendings },
+        { endpoint: "/toprated", setter: settoprated },
         { endpoint: "/bollywood", setter: setbollywood }
       ];
       
@@ -67,7 +66,7 @@ const MoviesFetch = ({ setMovies, setTopRated, settrendings, setbollywood }) => 
       await Promise.all(
         fetchOperations.map(async ({ endpoint, setter }) => {
           const data = await fetchFromAPI(`${BASE_URL}${endpoint}`);
-          if (data && data.movies && isMounted) {
+          if (data && data.movies) {
             const formattedMovies = await formatMoviesData(data.movies);
             setter(formattedMovies);
           }
@@ -76,11 +75,9 @@ const MoviesFetch = ({ setMovies, setTopRated, settrendings, setbollywood }) => 
     };
     
     fetchAllMovieData();
+  }, []);
 
-    return () => {
-      isMounted = false;
-    };
-  }, []); // Empty dependency array since we're using stable setter functions
+  
 };
 
 export default MoviesFetch;
