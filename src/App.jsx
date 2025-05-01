@@ -78,9 +78,9 @@ function App() {
           } />
           
           <Route path="/go/:id" element={
-            // <ProtectedRoute>
+            <ProtectedRoute>
               <MovieDetail />
-            // </ProtectedRoute>
+            </ProtectedRoute>
           } />
           
           <Route path="/download/:title/:quality" element={

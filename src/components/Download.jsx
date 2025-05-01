@@ -6,7 +6,7 @@ const Download = () => {
   const [downloadProgress, setDownloadProgress] = useState(0);
   const { title, quality } = useParams();
   const navigate = useNavigate();
-  const [countdown, setCountdown] = useState(1);
+  const [countdown, setCountdown] = useState(12);
   const [links, setLinks] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
