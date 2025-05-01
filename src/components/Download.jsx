@@ -70,7 +70,7 @@ const Download = () => {
   const fetchLinks = async () => {
     setLoading(true);
     try {
-      const response = await fetch(`http://localhost:5000/newdl/download-links/${shortenTitle(title)}/${quality}`);
+      const response = await fetch(`https://movieadminpanel-8lmd.onrender.com/download-links/${shortenTitle(title)}/${quality}`);
     //   const response = await fetch(`https://movieadminpanel-8lmd.onrender.com/newdl/download-links/Blackbag/1080p`);
       const data = await response.json();
       if (data.servers && Object.keys(data.servers).length > 0) {
