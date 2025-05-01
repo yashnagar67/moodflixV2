@@ -49,7 +49,7 @@ function App() {
           
           {/* Protected routes - require authentication */}
           <Route path="/" element={
-            // <ProtectedRoute>
+            <ProtectedRoute>
                   <>
               
       <TrendingSlider />
@@ -59,11 +59,11 @@ function App() {
         settopindia={settopindia}
         
       />
-      <MovieCard heading="🔥 Trending Tadka: Sabse Garam Movies!" movies={topglobal} />
-      <MovieCard heading="💥 Tera Mood, Hamari Hit!" movies={topindia} />
+      <MovieCard heading="🔥 Streaming Hot Across the Globe 🌎✨!" movies={topglobal} />
+      <MovieCard heading="💥 Sab Dekh Rahe Hain, Tumne Kya Dekha? 🇮🇳🎬" movies={topindia} />
       {/* <MovieCard heading="BollyWood" movies={bollywood} /> */}
     </>
-            // </ProtectedRoute>
+            </ProtectedRoute>
           } />
           
           <Route path="/recommended" element={
@@ -72,9 +72,9 @@ function App() {
             </ProtectedRoute>
           } />
           <Route path="/not-found/:id" element={
-            // <ProtectedRoute>
+            <ProtectedRoute>
               <MovieNotFound />
-            // </ProtectedRoute>
+             </ProtectedRoute>
           } />
           
           <Route path="/go/:id" element={
@@ -84,15 +84,15 @@ function App() {
           } />
           
           <Route path="/download/:title/:quality" element={
-            // <ProtectedRoute>
+            <ProtectedRoute>
               <Download />
-            // </ProtectedRoute>
+             </ProtectedRoute>
           } />
           
           <Route path="/categories" element={
-            // <ProtectedRoute>
+            <ProtectedRoute>
               <Watching />
-            // </ProtectedRoute>
+            </ProtectedRoute>
           } />
           
           {/* Catch all undefined routes */}

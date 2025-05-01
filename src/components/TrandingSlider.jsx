@@ -806,7 +806,7 @@ useEffect(() => {
                 <div className="flex flex-wrap gap-1 md:gap-3">
                 <button 
                  onClick={(e) => {
-                  // e.preventDefault();
+                  e.preventDefault();
                   e.stopPropagation();  // Prevent event bubbling
                   handleDownload({"title": movie.title, "year": movie.year});
                 }}
