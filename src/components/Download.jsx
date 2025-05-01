@@ -6,7 +6,7 @@ const Download = () => {
   const [downloadProgress, setDownloadProgress] = useState(0);
   const { title, quality } = useParams();
   const navigate = useNavigate();
-  const [countdown, setCountdown] = useState(12);
+  const [countdown, setCountdown] = useState(1);
   const [links, setLinks] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -31,6 +31,7 @@ const Download = () => {
     { icon: "💾", text: "Unlimited downloads" }
   ];
   const shortenTitle = (title) => {
+  
     const match = title.match(/^(.+?)\s*\((\d{4})\)/);
     if (match) {
       const name = match[1].trim().replace(/\s+/g, "-");
@@ -69,7 +70,7 @@ const Download = () => {
   const fetchLinks = async () => {
     setLoading(true);
     try {
-      const response = await fetch(`https://movieadminpanel-8lmd.onrender.com/newdl/download-links/${shortenTitle(title)}/${quality}`);
+      const response = await fetch(`http://localhost:5000/newdl/download-links/${shortenTitle(title)}/${quality}`);
     //   const response = await fetch(`https://movieadminpanel-8lmd.onrender.com/newdl/download-links/Blackbag/1080p`);
       const data = await response.json();
       if (data.servers && Object.keys(data.servers).length > 0) {
@@ -278,7 +279,7 @@ const Download = () => {
         <h1 className="text-3xl font-bold mb-2">{decodeURIComponent(title)}</h1>
         <div className="flex items-center gap-4 mb-6 text-gray-300">
           <span className="border border-gray-600 px-2 py-1 rounded text-sm">{quality}</span>
-          <span>2023</span>
+          <span>22022</span>
           <span className="bg-gray-800 px-2 py-1 rounded text-sm">HD</span>
         </div>
       </div>

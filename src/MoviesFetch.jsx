@@ -49,7 +49,7 @@ async function formatMoviesData(movies) {
 }
 
 // Main component
-const MoviesFetch = ({ setMovies, settrendings, settoprated, setbollywood }) => {
+const MoviesFetch = ({ setMovies, settopglobal, settopindia }) => {
   useEffect(() => {
     // Using a single async function to manage all fetches
     const fetchAllMovieData = async () => {
@@ -57,9 +57,9 @@ const MoviesFetch = ({ setMovies, settrendings, settoprated, setbollywood }) => 
       
       // Define all data fetching operations
       const fetchOperations = [
-        { endpoint: "/trendings", setter: settrendings },
-        { endpoint: "/toprated", setter: settoprated },
-        { endpoint: "/bollywood", setter: setbollywood }
+        { endpoint: "/topglobal", setter: settopglobal },
+        { endpoint: "/topindia", setter: settopindia },
+       
       ];
       
       // Execute all fetch operations in parallel

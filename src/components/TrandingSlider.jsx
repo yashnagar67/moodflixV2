@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback, useRef } from "react";
 import { NavLink } from "react-router-dom"
+import { useNavigate } from "react-router-dom";
 import { lazy, Suspense } from 'react';
 import MovieControls from './MovieControl'
 const YouTubePlayer = lazy(() => import('./YouTubePlayer'));;
@@ -92,7 +93,7 @@ const movies = [
     gif: "https://movieadminpanel-8lmd.onrender.com/mickey17.webm",
 
     genre: ["Action", "Crime", "Thriller"],
-    year: "2014",
+    year: "2025",
     description: "After fighting his way out of a building filled with gangsters and madmen, Rama goes undercover with the thugs of Jakarta to bring down the corrupt police and criminal underworld from within.",
     duration: "2h 30m",
     rating: 8.0,
@@ -102,6 +103,7 @@ const movies = [
 ];
 
 export default function OptimizedMovieSlider() {
+
   const [showMoodSelector, setShowMoodSelector] = useState(() => {
     // Check if user has already seen the mood selector
     return localStorage.getItem('moodSelectorSeen') !== 'true';
@@ -111,7 +113,7 @@ export default function OptimizedMovieSlider() {
     // Get previously selected mood if available
     return localStorage.getItem('selectedMood') || null;
   });
-  
+  const navigate = useNavigate();
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isTrailerPlaying, setIsTrailerPlaying] = useState(false);
   const [isGifPlaying, setIsGifPlaying] = useState(false);
@@ -146,6 +148,32 @@ export default function OptimizedMovieSlider() {
     }, 800);
     return () => clearTimeout(timer);
   }, []);
+  const handleDownload = (movie) => {
+    console.log("Download button clicked!");
+    try {
+      // Invisible iframe method
+      // const iframe = document.createElement('iframe');
+      // window.location.href = url;
+      navigate(`/go/${movie.title}-${movie.year}`); // Or movie.slug
+
+
+      
+      
+      // Show toast
+      
+      // Hide toast after 3 seconds
+      // setTimeout(() => {
+      //   setShowToast(true);
+
+      // }, 1000);
+      // setTimeout(() => {
+      //   setShowToast(false);
+      // }, 4000);
+      
+    } catch (error) {
+      console.error("Error loading download silently:", error);
+    }
+  };
 
   // Handle window resize for responsive behavior
   useEffect(() => {
@@ -774,24 +802,28 @@ useEffect(() => {
                 </p> */}
 
                 {/* Action buttons */}
+                <div className="relative z-20">
                 <div className="flex flex-wrap gap-1 md:gap-3">
-                <a 
-      href={movie.watchLink} 
-      target="_blank" 
-      rel="noopener noreferrer"
-      className="flex items-center justify-center  hover:bg-red-700 text-red-500 font-bold py-2 px-5 rounded-md transition-all duration-200 transform hover:scale-105 shadow-md hover:shadow-lg"
-      aria-label={`Play ${movie.title}`}
-    >
-      {/* Animated Play Icon */}
-      <svg 
-        className="w-5 h-5 mr-2 animate-pulse" 
-        fill="currentColor" 
-        viewBox="0 0 24 24"
-      >
-        <path d="M8 5.14v14l11-7-11-7z" />
-      </svg>
-      <span className="tracking-wide">Play Now</span>
-    </a>
+                <button 
+                 onClick={(e) => {
+                  // e.preventDefault();
+                  e.stopPropagation();  // Prevent event bubbling
+                  handleDownload({"title": movie.title, "year": movie.year});
+                }}
+                className="play-button flex items-center justify-center text-red-500 font-bold py-2 px-5 rounded-md transition-all duration-200 transform hover:scale-105 shadow-md hover:shadow-lg z-40"
+                aria-label={`Play ${movie.title}`}
+                style={{ position: 'relative', zIndex: 40 }}
+              >
+                {/* Animated Play Icon */}
+                <svg 
+                  className="w-5 h-5 mr-2 animate-pulse" 
+                  fill="currentColor" 
+                  viewBox="0 0 24 24"
+                >
+                  <path d="M8 5.14v14l11-7-11-7z" />
+                </svg>
+                <span className="tracking-wide">Play Now</span>
+              </button>
                   <button 
                     className="flex items-center  hover:bg-gray-700 text-white font-medium py-1 px-3 shadow-md md:py-2 md:px-6 rounded text-xs md:text-base"
                   >
@@ -800,6 +832,7 @@ useEffect(() => {
                     </svg>
                     Info
                   </button>
+                </div>
                 </div>
               </div>
             </div>

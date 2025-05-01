@@ -16,14 +16,17 @@ import Download from './components/Download';
 import TokenRedirect from './pages/TokenRedirect';
 import AccessDenied from './pages/AccessDenied';
 import ProtectedRoute from './components/protectedRoute';
+import MovieNotFound from './components/MovieNotFound';
 
 function App() {
   const [selectedMood, setSelectedMood] = useState(null);
+  const [topglobal, settopglobal] = useState([])
+  const [topindia, settopindia] = useState([])
   const [movieData, setmovieData] = useState([]);
   const [toprated, settoprated] = useState([]);
   const [trendings, settrendings] = useState([]);
   const [bollywood, setbollywood] = useState([]);
-  const [Topbanner, setTopbanner] = useState([]);
+ 
 
   const handleMoodSelect = (mood) => {
     setSelectedMood(mood);
@@ -46,20 +49,21 @@ function App() {
           
           {/* Protected routes - require authentication */}
           <Route path="/" element={
-            <ProtectedRoute>
+            // <ProtectedRoute>
                   <>
+              
       <TrendingSlider />
       <MoviesFetch
         movie={setmovieData}
-        settoprated={settoprated}
-        setbollywood={setbollywood}
-        settrendings={settrendings}
+        settopglobal={settopglobal}
+        settopindia={settopindia}
+        
       />
-      <MovieCard heading="🔥 Trending Tadka: Sabse Garam Movies!" movies={trendings} />
-      <MovieCard heading="💥 Tera Mood, Hamari Hit!" movies={toprated} />
-      <MovieCard heading="BollyWood" movies={bollywood} />
+      <MovieCard heading="🔥 Trending Tadka: Sabse Garam Movies!" movies={topglobal} />
+      <MovieCard heading="💥 Tera Mood, Hamari Hit!" movies={topindia} />
+      {/* <MovieCard heading="BollyWood" movies={bollywood} /> */}
     </>
-            </ProtectedRoute>
+            // </ProtectedRoute>
           } />
           
           <Route path="/recommended" element={
@@ -67,23 +71,28 @@ function App() {
               <Recommended />
             </ProtectedRoute>
           } />
+          <Route path="/not-found/:id" element={
+            // <ProtectedRoute>
+              <MovieNotFound />
+            // </ProtectedRoute>
+          } />
           
           <Route path="/go/:id" element={
-            <ProtectedRoute>
+            // <ProtectedRoute>
               <MovieDetail />
-            </ProtectedRoute>
+            // </ProtectedRoute>
           } />
           
           <Route path="/download/:title/:quality" element={
-            <ProtectedRoute>
+            // <ProtectedRoute>
               <Download />
-            </ProtectedRoute>
+            // </ProtectedRoute>
           } />
           
           <Route path="/categories" element={
-            <ProtectedRoute>
+            // <ProtectedRoute>
               <Watching />
-            </ProtectedRoute>
+            // </ProtectedRoute>
           } />
           
           {/* Catch all undefined routes */}

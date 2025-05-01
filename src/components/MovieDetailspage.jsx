@@ -58,28 +58,38 @@ export default function MovieDetailPage() {
       setLoading(true);
       try {
         const res = await fetch(`https://movieadminpanel-8lmd.onrender.com/api/fetchmovie/${id}`);
+        if (!res.ok) {
+          // If status is 404 or server error
+          throw new Error("Movie not found");
+        }
         const data = await res.json();
+  
+        if (!data || Object.keys(data).length === 0) {
+          // If empty data received
+          throw new Error("No movie data found");
+        }
+  
         console.log("Movie data received:", data);
         setMovie(data);
       } catch (err) {
-        console.error("Error fetching movie:", err);
-        // Could add error state handling here
+        // console.error("Error fetching movie:", err);
+        navigate(`/not-found/${id}`); // ✅ Now it redirects correctly
       } finally {
-        // Simulate a minimum loading time for smoother UX
         setTimeout(() => setLoading(false), 50);
       }
     };
-    
+  
     if (id) fetchMovie();
-    
+  
     // Scroll listener for sticky controls
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 100);
     };
-    
+  
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
-  }, [id]);
+  }, [id, navigate]); // ✅ Always include navigate if you use it
+  
 
   // Click outside handler for quality options popup
   useEffect(() => {
@@ -403,18 +413,18 @@ export default function MovieDetailPage() {
         }`}
       >
         <div className="container mx-auto flex gap-3">
-          <button 
-            onClick={playTrailer}
-            className="flex-1 bg-white text-black px-4 py-3 rounded-md flex items-center justify-center font-medium"
-          >
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
-              <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clipRule="evenodd" />
-            </svg>
-            Play
-          </button>
           
           {/* Download quality options for sticky button */}
           <div className="flex-1 flex gap-2">
+            <button 
+              onClick={() => handleDownload(movie, '480p')}
+              className="flex-1 bg-red-600 hover:bg-red-700 px-4 py-3 rounded-md flex items-center justify-center font-medium"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+              </svg>
+              480p
+            </button>
             <button 
               onClick={() => handleDownload(movie, '1080p')}
               className="flex-1 bg-red-600 hover:bg-red-700 px-4 py-3 rounded-md flex items-center justify-center font-medium"
