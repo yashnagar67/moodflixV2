@@ -4,26 +4,63 @@ export default function MaintenancePage() {
   const [progress, setProgress] = useState(0);
   const [showRefreshButton, setShowRefreshButton] = useState(false);
   const [loadingDots, setLoadingDots] = useState('');
+  const [upComings, setupComings] = useState([])
   const [isExpanded, setIsExpanded] = useState(false);
 
-  // Simulate loading progress
+  // Calculate progress based on 1-hour maintenance duration
+  const [startTime] = useState(new Date());
+  const [currentTime, setCurrentTime] = useState(new Date());
+  const [timeRemaining, setTimeRemaining] = useState('');
+  const maintenanceDuration = 300 * 300 * 1000; // 1 hour in milliseconds
   useEffect(() => {
-    const interval = setInterval(() => {
-      setProgress(prevProgress => {
-        const newProgress = prevProgress + Math.random() * 2;
-        if (newProgress >= 95) {
-          clearInterval(interval);
-          setTimeout(() => {
-            setShowRefreshButton(true);
-          }, 2000);
-          return 95;
-        }
-        return newProgress;
-      });
-    }, 300);
+    const fetchPopularMovies = async () => {
+      try {
+        const res = await fetch('http://localhost:5000/api/upcoming');
+        if (!res.ok) throw new Error('Failed to fetch popular movies');
+        
+        const data = await res.json();
+        setupComings(data);
+      } catch (err) {
+        console.error('Error:', err);
+        // Fallback data
+        setupComings([]);
+      } finally {
+        // Simulate loading for better UX
+        setTimeout(() => setLoading(false), 800); 
+      }
+    };
 
-    return () => clearInterval(interval);
+    fetchPopularMovies();
   }, []);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      const now = new Date();
+      setCurrentTime(now);
+      
+      // Calculate elapsed time
+      const elapsedTime = now - startTime;
+      
+      // Calculate progress percentage (capped at 95%)
+      const calculatedProgress = Math.min(95, (elapsedTime / maintenanceDuration) * 100);
+      
+      setProgress(calculatedProgress);
+      
+      // Calculate time remaining
+      const remainingMs = Math.max(0, maintenanceDuration - elapsedTime);
+      const remainingMinutes = Math.floor(remainingMs / 60000);
+      const remainingSeconds = Math.floor((remainingMs % 60000) / 1000);
+      setTimeRemaining(`${remainingMinutes}m ${remainingSeconds}s`);
+      
+      // Show refresh button when progress reaches 95%
+      if (calculatedProgress >= 95) {
+        setShowRefreshButton(true);
+        clearInterval(timer);
+      }
+    }, 1000); // Update every second
+
+    return () => clearInterval(timer);
+  }, [startTime]);
 
   // Animate the loading dots
   useEffect(() => {
@@ -50,16 +87,14 @@ export default function MaintenancePage() {
   return (
     <div className="bg-black text-white min-h-screen flex flex-col items-center justify-center p-4">
       {/* Netflix-style logo animation */}
-      <div className="mb-16 relative">
+      <div className="mb-16 relative flex flex-col items-center">
         <div className="w-24 h-24 relative">
           <div className="animate-pulse absolute inset-0 rounded-full bg-red-600 opacity-75"></div>
           <div className="relative rounded-full bg-red-600 w-24 h-24 flex items-center justify-center shadow-lg shadow-red-800/30">
             <span className="text-white font-bold text-3xl">M</span>
           </div>
         </div>
-        <div className="absolute -bottom-4 left-1/2 transform -translate-x-1/2 w-full">
-          <div className="w-64 h-1 bg-gradient-to-r from-transparent via-red-600 to-transparent"></div>
-        </div>
+        <div className="w-64 h-1 bg-gradient-to-r from-transparent via-red-600 to-transparent mt-4"></div>
       </div>
 
       {/* Main content */}
@@ -84,7 +119,10 @@ export default function MaintenancePage() {
           {showRefreshButton ? (
             <span>System updates complete</span>
           ) : (
-            <span>System updates in progress{loadingDots}</span>
+            <div>
+              <span>System updates in progress{loadingDots}</span>
+              <div className="mt-2 text-red-500 font-medium">Estimated time remaining: {timeRemaining}</div>
+            </div>
           )}
         </div>
 
@@ -141,7 +179,7 @@ export default function MaintenancePage() {
               </div>
               <div>
                 <h3 className="text-white text-sm font-medium mb-1">Expected Completion</h3>
-                <p className="text-xs">Within 1 hour</p>
+                <p className="text-xs">Approximately {timeRemaining} remaining</p>
               </div>
               <div>
                 <h3 className="text-white text-sm font-medium mb-1">Affected Services</h3>
@@ -160,22 +198,45 @@ export default function MaintenancePage() {
       <div className="w-full max-w-4xl mt-16">
         <h2 className="text-lg font-medium mb-6 text-center">Coming Soon</h2>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          {[1, 2, 3, 4].map((item) => (
-            <div key={item} className="relative group overflow-hidden rounded-md">
-              <div className="aspect-[2/3] bg-gradient-to-br from-gray-800 to-gray-900 animate-pulse">
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-12 w-12 text-gray-700" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M15 10h4.764a2 2 0 011.789 2.894l-3.5 7A2 2 0 0115.263 21h-4.017c-.163 0-.326-.02-.485-.06L7 20m7-10V5a2 2 0 00-2-2h-.095c-.5 0-.905.405-.905.905 0 .714-.211 1.412-.608 2.006L7 11v9m7-10h-2M7 20H5a2 2 0 01-2-2v-6a2 2 0 012-2h2.5" />
-                  </svg>
-                </div>
-              </div>
-              <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                <div className="absolute bottom-0 left-0 right-0 p-3">
-                  <div className="text-sm font-medium">Coming Soon</div>
-                  <div className="text-xs text-gray-400">When we're back online</div>
+        {upComings.map((movie) => (
+            <div 
+            key={movie.id}
+            
+            className="relative group rounded-md overflow-hidden cursor-pointer transform transition-all duration-300 hover:scale-105 hover:z-10 hover:shadow-xl"
+          >
+            <div className="">
+              <img
+                src={movie.poster}
+                alt={movie.title}
+                className="w-full h-full object-cover transition-opacity duration-500"
+                onLoad={(e) => e.target.classList.remove('opacity-0')}
+              />
+            </div>
+            
+            {/* Hover effect overlay */}
+            <div className="absolute inset-0 bg-gradient-to-t from-black via-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-3">
+              <div className="transform translate-y-2 group-hover:translate-y-0 transition-transform duration-300">
+                <h4 className="text-sm font-medium truncate">{movie.title}</h4>
+                
+                <div className="flex items-center justify-between mt-2">
+                  {movie.rating && (
+                    <div className="flex items-center space-x-1">
+                      <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3 text-yellow-400" viewBox="0 0 20 20" fill="currentColor">
+                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                      </svg>
+                      <span className="text-xs">{movie.rating}</span>
+                    </div>
+                  )}
+                  
+                  <button className="opacity-0 group-hover:opacity-100 transition-opacity duration-300 p-1 bg-white/10 hover:bg-white/20 rounded-full">
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
+                    </svg>
+                  </button>
                 </div>
               </div>
             </div>
+          </div>
           ))}
         </div>
       </div>
