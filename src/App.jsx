@@ -52,9 +52,9 @@ function App() {
           <Route path="/" element={
             <ProtectedRoute>
                   <>
-                <MaintanancePage/>
+                {/* <MaintanancePage/> */}
               
-      {/* <TrendingSlider />
+      <TrendingSlider />
       <MoviesFetch
         movie={setmovieData}
         settopglobal={settopglobal}
@@ -62,7 +62,7 @@ function App() {
         
       />
       <MovieCard heading="🔥 Streaming Hot Across the Globe 🌎✨!" movies={topglobal} />
-      <MovieCard heading="💥 Sab Dekh Rahe Hain, Tumne Kya Dekha? 🇮🇳🎬" movies={topindia} /> */}
+      <MovieCard heading="💥 Sab Dekh Rahe Hain, Tumne Kya Dekha? 🇮🇳🎬" movies={topindia} />
       {/* <MovieCard heading="BollyWood" movies={bollywood} /> */}
     </>
             </ProtectedRoute>

@@ -618,9 +618,9 @@ useEffect(() => {
           </div>
           
           <div className="flex items-center">
-            <button className="text-white hover:text-gray-300 transition rounded-full overflow-hidden w-7 h-7 md:w-8 md:h-8">
+            <button className="text-white hover:text-gray-300 transition rounded-full overflow-hidden w-10 h-10 md:w-15 md:h-12">
               <img 
-                src="/api/placeholder/32/32" 
+              src="vipAccess.svg"
                 alt="Profile" 
                 className="w-full h-full object-cover"
               />

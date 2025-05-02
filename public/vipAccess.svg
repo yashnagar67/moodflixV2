@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg viewBox="0 0 300 150" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background rectangle with rounded corners -->
+  <rect x="20" y="20" width="260" height="110" rx="10" fill="#141414" stroke="#E50914" stroke-width="2">
+    <animate attributeName="stroke-opacity" values="0.6;1;0.6" dur="2s" repeatCount="indefinite" />
+  </rect>
+  
+  <!-- Glowing effect behind the button -->
+  <rect x="25" y="25" width="250" height="100" rx="8" fill="none" stroke="#E50914" stroke-width="1" filter="url(#glow)" opacity="0.5">
+    <animate attributeName="opacity" values="0.5;0.8;0.5" dur="3s" repeatCount="indefinite" />
+  </rect>
+  
+  <!-- Left decorative line -->
+  <line x1="40" y1="35" x2="40" y2="115" stroke="#E50914" stroke-width="2" stroke-linecap="round" opacity="0.8">
+    <animate attributeName="y2" values="115;105;115" dur="4s" repeatCount="indefinite" />
+  </line>
+  
+  <!-- Right decorative line -->
+  <line x1="260" y1="35" x2="260" y2="115" stroke="#E50914" stroke-width="2" stroke-linecap="round" opacity="0.8">
+    <animate attributeName="y2" values="115;105;115" dur="4s" repeatCount="indefinite" />
+  </line>
+  
+  <!-- Crown icon -->
+  <path d="M125,50 L115,65 L135,65 Z" fill="#E50914" />
+  <path d="M145,50 L135,65 L155,65 Z" fill="#E50914" />
+  <path d="M165,50 L155,65 L175,65 Z" fill="#E50914" />
+  <rect x="115" y="65" width="60" height="8" fill="#E50914" />
+  
+  <!-- Shimmer effect across the button -->
+  <rect x="20" y="20" width="260" height="110" rx="10" fill="url(#shimmer)" opacity="0.2">
+    <animate attributeName="x" values="-260;260;-260" dur="3s" repeatCount="indefinite" />
+  </rect>
+  
+  <!-- Main text - VIP ACCESS -->
+  <text x="150" y="100" font-family="Arial, sans-serif" font-size="24" font-weight="bold" text-anchor="middle" fill="#FFFFFF" letter-spacing="2">
+    VIP ACCESS
+    <animate attributeName="fill" values="#FFFFFF;#E6E6E6;#FFFFFF" dur="4s" repeatCount="indefinite" />
+  </text>
+  
+  <!-- Premium Tag -->
+  <rect x="105" y="110" width="90" height="18" rx="9" fill="#E50914" />
+  <text x="150" y="124" font-family="Arial, sans-serif" font-size="12" font-weight="bold" text-anchor="middle" fill="#FFFFFF">PREMIUM</text>
+  
+  <!-- Pulse effect around the button -->
+  <rect x="20" y="20" width="260" height="110" rx="10" fill="none" stroke="#E50914" stroke-width="1" opacity="0.3">
+    <animate attributeName="stroke-width" values="1;3;1" dur="2s" repeatCount="indefinite" />
+    <animate attributeName="stroke-opacity" values="0.3;0.8;0.3" dur="2s" repeatCount="indefinite" />
+  </rect>
+  
+  <!-- SVG Filters and Gradients -->
+  <defs>
+    <!-- Glow effect -->
+    <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="5" result="blur" />
+      <feComposite in="SourceGraphic" in2="blur" operator="over" />
+    </filter>
+    
+    <!-- Shimmer gradient -->
+    <linearGradient id="shimmer" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0" />
+      <stop offset="50%" stop-color="#FFFFFF" stop-opacity="0.3" />
+      <stop offset="100%" stop-color="#FFFFFF" stop-opacity="0" />
+    </linearGradient>
+  </defs>
+</svg>
