@@ -15,7 +15,7 @@ export default function MaintenancePage() {
   useEffect(() => {
     const fetchPopularMovies = async () => {
       try {
-        const res = await fetch('http://localhost:5000/api/upcoming');
+        const res = await fetch('https://movieadminpanel.onrender.com/api/upcoming');
         if (!res.ok) throw new Error('Failed to fetch popular movies');
         
         const data = await res.json();
