@@ -17,6 +17,7 @@ import TokenRedirect from './pages/TokenRedirect';
 import AccessDenied from './pages/AccessDenied';
 import ProtectedRoute from './components/protectedRoute';
 import MovieNotFound from './components/MovieNotFound';
+import  MaintanancePage from './components/server_down';
 
 function App() {
   const [selectedMood, setSelectedMood] = useState(null);
@@ -51,8 +52,9 @@ function App() {
           <Route path="/" element={
             <ProtectedRoute>
                   <>
+                <MaintanancePage/>
               
-      <TrendingSlider />
+      {/* <TrendingSlider />
       <MoviesFetch
         movie={setmovieData}
         settopglobal={settopglobal}
@@ -60,7 +62,7 @@ function App() {
         
       />
       <MovieCard heading="🔥 Streaming Hot Across the Globe 🌎✨!" movies={topglobal} />
-      <MovieCard heading="💥 Sab Dekh Rahe Hain, Tumne Kya Dekha? 🇮🇳🎬" movies={topindia} />
+      <MovieCard heading="💥 Sab Dekh Rahe Hain, Tumne Kya Dekha? 🇮🇳🎬" movies={topindia} /> */}
       {/* <MovieCard heading="BollyWood" movies={bollywood} /> */}
     </>
             </ProtectedRoute>
