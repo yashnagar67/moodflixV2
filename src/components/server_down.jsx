@@ -88,7 +88,7 @@ export default function MaintenancePage() {
     <div className="bg-black text-white min-h-screen flex flex-col items-center justify-center p-4">
       {/* Netflix-style logo animation */}
       <div className="mb-16 relative flex flex-col items-center">
-        <div className="w-24 h-24 relative">
+        <div className="w-24 h-24 relative animate-pulse">
           <div className="animate-pulse absolute inset-0 rounded-full bg-red-600 opacity-75"></div>
           <div className="relative rounded-full bg-red-600 w-24 h-24 flex items-center justify-center shadow-lg shadow-red-800/30">
             <span className="text-white font-bold text-3xl">M</span>
